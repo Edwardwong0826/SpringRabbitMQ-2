@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: rabbitmq-springboot2
+  profiles:
+    active: dev
+
+---
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5675
+    username: guest
+    password: guest
+    virtual-host: /
+    listener:
+      simple:
+        prefetch: 1 # this force the consumer only fetch from the queue when consume finish, thus those higher performance consumer can handle more queue messages
+        acknowledge-mode: auto # by default acknowledge mode was none, we can set it to manual, auto or none. when manual we need manually return ack or nack by ourselves
+        retry:
+          enabled: true # open retry mechanism when consumer failed to consume
+          initial-interval: 200ms # first wait time for initial retry
+          multiplier: 1
+          max-attempts: 3
+          stateless: true # if logic got do transaction, change to false save the context
+
+  config:
+    activate:
+      on-profile: dev
+---
